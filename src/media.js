@@ -25,6 +25,11 @@ export default class Single {
         this.updateDirectProgress(data.loaded, data.total)
       }
     })
+    result.then((res) => {
+      this.handlers.onComplete(res.data)
+    },err => {
+      this.handlers.onError(err)
+    })
     this.finishDirectProgress()
     return result;
   }
