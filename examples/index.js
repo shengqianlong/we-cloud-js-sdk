@@ -8,5 +8,11 @@ window.uploadFile =  function uploadFile() {
     var a = document.getElementById('progress');
     a.textContent="进度：" + total.percent.toFixed(0) + "% ";
   }
-  upload.subscribe(next)
+  let error = (response) => {
+    console.log(response)
+  }
+  let complete = (response) => {
+    console.log(response)
+  }
+  upload.subscribe(next, error, complete)
 }

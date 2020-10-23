@@ -9,11 +9,12 @@ export default class Single {
   }
 
   async run() {
-    const url = urls.uploadSingleUrl;
+    const url = urls.uploadMediaUrl;
     const formData = new FormData()
     formData.append('file', this.option.file)
     formData.append('bucketId', this.option.bucketId)
     formData.append('uploadToken', this.option.uploadToken)
+    formData.append('asyncProcessing', this.option.asyncProcessing)
     if (this.option.options && Object.keys(this.option.options).length !== 0) {
       Object.keys(this.option.options).forEach(key => formData.append(key, this.option.options[key].toString()))
     }
@@ -25,11 +26,6 @@ export default class Single {
       }
     })
     this.finishDirectProgress()
-    result.then((res) => {
-      this.handlers.onComplete(res.data)
-    },err => {
-      this.handlers.onError(err)
-    })
     return result;
   }
   updateDirectProgress(loaded, total) {

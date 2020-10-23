@@ -6,8 +6,8 @@ module.exports = {
     output: {
         path: path.join(__dirname, '../dist/'),
         publicPath: '/',
-        filename: 'jd.map.js',
-        library: 'JD',
+        filename: 'SQL.min.js',
+        library: 'SQL',
         libraryTarget: 'umd',
         globalObject: 'this',
         // libraryExport: 'default',

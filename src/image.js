@@ -9,7 +9,7 @@ export default class Single {
   }
 
   async run() {
-    const url = urls.uploadSingleUrl;
+    const url = urls.uploadImageUrl;
     const formData = new FormData()
     formData.append('file', this.option.file)
     formData.append('bucketId', this.option.bucketId)
@@ -25,11 +25,6 @@ export default class Single {
       }
     })
     this.finishDirectProgress()
-    result.then((res) => {
-      this.handlers.onComplete(res.data)
-    },err => {
-      this.handlers.onError(err)
-    })
     return result;
   }
   updateDirectProgress(loaded, total) {
