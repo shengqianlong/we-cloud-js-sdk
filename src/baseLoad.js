@@ -1,15 +1,48 @@
 import * as utils from './utils'
-import urls from './url'
 
-export default class Single {
+export default class Baseload {
 
-  constructor(option, handlers){
+  constructor(option, handlers, url){
+    this.xhrList = []
     this.option = option
     this.handlers = handlers
+    this.url = url
+  }
+
+  async putFile() {
+    this.aborted = false
+
+    try {
+      this.uploadAt = new Date().getTime()
+
+      const result = await this.run()
+      this.handlers.onComplete(result.data)
+
+      return result
+
+    } catch (err) {
+      this.clear()
+      this.handlers.onError(err)
+      throw err
+    }
+  }
+
+  clear() {
+    this.xhrList.forEach(xhr => xhr.abort())
+    this.xhrList = []
+  }
+
+  stop() {
+    this.clear()
+    this.aborted = true
+  }
+
+  addXhr(xhr) {
+    this.xhrList.push(xhr)
   }
 
   async run() {
-    const url = urls.uploadImageUrl;
+    const url = this.url;
     const formData = new FormData()
     formData.append('file', this.option.file)
     formData.append('bucketId', this.option.bucketId)
@@ -22,12 +55,8 @@ export default class Single {
       body: formData,
       onProgress: (data) => {
         this.updateDirectProgress(data.loaded, data.total)
-      }
-    })
-    result.then((res) => {
-      this.handlers.onComplete(res.data)
-    },err => {
-      this.handlers.onError(err)
+      },
+      onCreate: xhr => this.addXhr(xhr)
     })
     this.finishDirectProgress()
     return result;

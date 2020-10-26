@@ -14,5 +14,9 @@ window.uploadFile =  function uploadFile() {
   let complete = (response) => {
     console.log(response)
   }
-  upload.subscribe(next, error, complete)
+  let subscription =  upload.subscribe(next, error, complete)
+
+  window.stopUpload = function() {
+    subscription.unsubscribe()
+  }
 }

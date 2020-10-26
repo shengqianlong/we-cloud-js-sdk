@@ -1,6 +1,5 @@
-import Single from './single'
-import Image from './image'
-// import Media from './media'
+import Baseload from './baseLoad'
+import urls from './url'
 import { Observable } from './observable'
 // 单文件上传
 /**
@@ -16,14 +15,15 @@ export function uploadSingleFile(file, bucketId, uploadToken, options) {
     uploadToken,
     options
   }
+  const uploadUrl = urls.uploadSingleUrl
   return new Observable((observer) => {
-    const manager = new Single(newOption, {
+    const manager = new Baseload(newOption, {
       onData: (data) => observer.next(data),
       onError: (err) => observer.error(err),
       onComplete: (res) => observer.complete(res)
-    })
-    manager.run()
-    return manager
+    }, uploadUrl)
+    manager.putFile();
+    return manager.stop.bind(manager)
   })
 }
 
@@ -41,14 +41,15 @@ export function uploadImageFile(file, bucketId, uploadToken, options) {
     uploadToken,
     options
   }
+  const uploadUrl = urls.uploadImageUrl
   return new Observable((observer) => {
-    const manager = new Image(newOption, {
+    const manager = new Baseload(newOption, {
       onData: (data) => observer.next(data),
       onError: (err) => observer.error(err),
       onComplete: (res) => observer.complete(res)
-    })
-    manager.run()
-    return manager
+    }, uploadUrl)
+    manager.putFile();
+    return manager.stop.bind(manager)
   })
 }
 

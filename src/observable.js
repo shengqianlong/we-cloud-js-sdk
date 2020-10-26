@@ -1,20 +1,43 @@
+/** 表示可清理的资源，比如 Observable 的执行 */
+class Subscription {
+    /** 用来标示该 Subscription 是否被取消订阅的标示位 */
+    closed = false;
+    /** 清理 subscription 持有的资源 */
+    _unsubscribe;
+    /** 取消 observer 的订阅 */
+    unsubscribe() {
+        if (this.closed) {
+            return;
+        }
+        this.closed = true;
+        if (this._unsubscribe) {
+            this._unsubscribe();
+        }
+    }
+    /** 添加一个 tear down 在该 Subscription 的 unsubscribe() 期间调用 */
+    add(teardown) {
+        this._unsubscribe = teardown;
+    }
+}
+
 /**
  * 实现 Observer 接口并且继承 Subscription 类，Observer 是消费 Observable 值的公有 API
  * 所有 Observers 都转化成了 Subscriber，以便提供类似 Subscription 的能力，比如 unsubscribe
  */
-export class Subscriber {
+export class Subscriber extends Subscription {
     isStopped = false;
     destination;
 
     constructor(observerOrNext, error, complete) {
+        super();
         if (observerOrNext && typeof observerOrNext === "object") {
             this.destination = observerOrNext;
         } else {
             this.destination = {
-              ...observerOrNext && { next: observerOrNext },
-              ...error && { error },
-              ...complete && { complete }
-            }
+                ...(observerOrNext && { next: observerOrNext }),
+                ...(error && { error }),
+                ...(complete && { complete }),
+            };
         }
     }
 
@@ -24,6 +47,7 @@ export class Subscriber {
         }
 
         this.isStopped = true;
+        console.log('un')
         super.unsubscribe();
     }
 
@@ -47,6 +71,7 @@ export class Subscriber {
         }
     }
 }
+
 /** 可观察对象，当前的上传事件的集合 */
 export class Observable {
     constructor(_subscribe) {
@@ -54,7 +79,9 @@ export class Observable {
     }
     subscribe(observerOrNext, error, complete) {
         let sink = new Subscriber(observerOrNext, error, complete);
-        sink = this._subscribe(sink);
+        // sink = this._subscribe(sink);
+        sink.add(this._subscribe(sink))
+        console.log(sink)
         return sink;
     }
 }
