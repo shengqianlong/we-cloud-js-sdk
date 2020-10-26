@@ -47,7 +47,6 @@ export class Subscriber extends Subscription {
         }
 
         this.isStopped = true;
-        console.log('un')
         super.unsubscribe();
     }
 
@@ -81,7 +80,6 @@ export class Observable {
         let sink = new Subscriber(observerOrNext, error, complete);
         // sink = this._subscribe(sink);
         sink.add(this._subscribe(sink))
-        console.log(sink)
         return sink;
     }
 }
