@@ -6,8 +6,8 @@ module.exports = {
     output: {
         path: path.join(__dirname, '../dist/'),
         publicPath: '/',
-        filename: 'SQL.min.js',
-        library: 'SQL',
+        filename: 'Wecloud.min.js',
+        library: 'Wecloud',
         libraryTarget: 'umd',
         globalObject: 'this',
         // libraryExport: 'default',

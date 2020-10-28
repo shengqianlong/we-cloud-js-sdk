@@ -28,7 +28,7 @@ module.exports = merge(base, {
                 secure: false,
             },
         },
-        host: "192.168.1.205",
+        // host: "192.168.1.205",
         contentBase: false,
         compress: true,
         overlay: { warnings: false, errors: true },
